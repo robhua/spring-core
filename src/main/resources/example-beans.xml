@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+
+
+	<!-- Other Beans -->
+
+
+	<!-- bean definitions here -->
+	<bean id="myDataSource" class="core.xml.data.MyDataSource">
+		<property name="name" value="EveryOne"></property>
+	</bean>
+
+	<bean id="complexObjectDao" class="core.xml.data.ComplexObjectDao">
+		<property name="adminEmails">
+			<props>
+				<prop key="administrator">administrator@example.org</prop>
+				<prop key="support">support@example.org</prop>
+				<prop key="development">development@example.org</prop>
+			</props>
+		</property>
+
+		<property name="someList">
+			<list>
+				<ref bean="myDataSource" />
+			</list>
+		</property>
+
+		<property name="listUser">
+			<list>
+				<ref bean="myDataSource" />
+			</list>
+		</property>
+
+		<property name="someMap">
+			<map>
+				<entry key="an entry" value="just some string" />
+				<!-- <entry key="a ref" value-ref="myDataSource" /> -->
+			</map>
+		</property>
+
+		<property name="someSet">
+			<set>
+				<value>just string one</value>
+				<!-- <ref bean="myDataSource"/> -->
+			</set>
+		</property>
+	</bean>
+
+	<!-- Other Service -->
+	<bean id="serviceLocator" class="core.xml.business.DefaultServiceLocator">
+		<!-- inject any dependencies required by this locator bean -->
+	</bean>
+	<alias name="complexObject" alias="complexObject_dev" />
+	<alias name="complexObject" alias="complexObject_test" />
+
+	<!-- Instantiation with a Static Factory Method -->
+	<bean id="clientService" class="core.xml.business.ClientService"
+		factory-method="createInstance" />
+
+	<bean id="complexObject" class="core.xml.business.ComplexObjectServiceImpl"
+		factory-bean="serviceLocator" factory-method="createComplexObjectServiceImp">
+		<property name="complexObjectDao" ref="complexObjectDao" />
+	</bean>
+	<bean id="exampleBean" class="core.xml.model.ExampleBean">
+		<property name="beanOne">
+			<ref bean="anotherExampleBean" />
+		</property>
+		<constructor-arg name="ultimateAnswer" value="42" />
+		<constructor-arg name="years" value="750000" />
+	</bean>
+
+	<bean id="anotherExampleBean" class="core.xml.model.AnotherBean" />
+</beans>
