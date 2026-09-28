@@ -2,6 +2,7 @@ package core.xml.presentation;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -21,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
@@ -69,6 +71,39 @@ public class EmployeeCrudIntegrationTest {
 				.andExpect(status().isOk())
 				.andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content()
 						.string(containsString("Chưa có hồ sơ nào")));
+	}
+
+	@Test
+	public void mvcEmployeeListPaginatesAndSortsByNameThenAge() throws Exception {
+		jdbcTemplate.update("INSERT INTO employee (name, age) VALUES (?, ?)", "Beta Employee", 27);
+		jdbcTemplate.update("INSERT INTO employee (name, age) VALUES (?, ?)", "Alpha Employee", 35);
+		jdbcTemplate.update("INSERT INTO employee (name, age) VALUES (?, ?)", "Alpha Employee", 21);
+		for (int index = 1; index <= 9; index++) {
+			jdbcTemplate.update("INSERT INTO employee (name, age) VALUES (?, ?)", "Employee " + index, 20 + index);
+		}
+
+		MvcResult firstPageResult = mockMvc.perform(get("/employees").param("page", "0"))
+				.andExpect(status().isOk())
+				.andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content()
+						.string(containsString("12")))
+				.andReturn();
+		String firstPage = firstPageResult.getResponse().getContentAsString();
+		int firstAlpha = firstPage.indexOf("Alpha Employee");
+		int secondAlpha = firstPage.indexOf("Alpha Employee", firstAlpha + 1);
+		int beta = firstPage.indexOf("Beta Employee");
+		assertTrue(firstAlpha >= 0 && secondAlpha > firstAlpha && beta > secondAlpha);
+		String firstAlphaRow = firstPage.substring(firstPage.lastIndexOf("<tr", firstAlpha), firstPage.indexOf("</tr>", firstAlpha));
+		String secondAlphaRow = firstPage.substring(firstPage.lastIndexOf("<tr", secondAlpha), firstPage.indexOf("</tr>", secondAlpha));
+		assertTrue(firstAlphaRow.contains(">21</span>"));
+		assertTrue(secondAlphaRow.contains(">35</span>"));
+		assertTrue(!firstPage.contains("Employee 9"));
+
+		mockMvc.perform(get("/employees").param("page", "1"))
+				.andExpect(status().isOk())
+				.andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content()
+						.string(containsString("Employee 9")))
+				.andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content()
+						.string(containsString("2 / 2")));
 	}
 
 	@Test

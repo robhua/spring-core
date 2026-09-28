@@ -33,9 +33,9 @@
       <div class="directory-toolbar">
         <div>
           <h2 id="directory-title">Toàn bộ hồ sơ</h2>
-          <p>Dữ liệu được sắp xếp theo mã nhân viên.</p>
+          <p>Sắp xếp theo tên A-Z, sau đó theo tuổi tăng dần · 10 hồ sơ mỗi trang.</p>
         </div>
-        <div class="record-count"><strong th:text="${#lists.size(employees)}">0</strong><span>HỒ SƠ</span></div>
+        <div class="record-count"><strong th:text="${totalEmployees}">0</strong><span>HỒ SƠ</span></div>
       </div>
 
       <div class="table-wrap" th:if="${!#lists.isEmpty(employees)}">
@@ -71,6 +71,19 @@
         <p>Bắt đầu bằng cách thêm nhân viên đầu tiên vào danh bạ.</p>
         <a class="button button-secondary" th:href="@{/employees/new}">Tạo hồ sơ đầu tiên</a>
       </div>
+
+      <nav class="pagination" th:if="${totalPages > 1}" aria-label="Phân trang danh sách nhân viên">
+        <a class="page-link page-step" th:if="${hasPrevious}" th:href="@{/employees(page=${currentPage - 1})}">Trước</a>
+        <span class="page-link page-step is-disabled" th:unless="${hasPrevious}" aria-disabled="true">Trước</span>
+        <a class="page-link" th:each="pageNumber : ${#numbers.sequence(firstPage, lastPage)}"
+           th:href="@{/employees(page=${pageNumber})}"
+           th:classappend="${pageNumber == currentPage} ? ' is-current' : ''"
+           th:attr="aria-current=${pageNumber == currentPage} ? 'page' : null"
+           th:text="${pageNumber + 1}">1</a>
+        <span class="page-summary" th:text="|${currentPage + 1} / ${totalPages}|">1 / 2</span>
+        <a class="page-link page-step" th:if="${hasNext}" th:href="@{/employees(page=${currentPage + 1})}">Tiếp</a>
+        <span class="page-link page-step is-disabled" th:unless="${hasNext}" aria-disabled="true">Tiếp</span>
+      </nav>
       <footer class="directory-footer"><span>SPRING CORE</span><span>QUẢN LÝ HỒ SƠ</span></footer>
     </section>
   </main>

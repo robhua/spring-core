@@ -17,10 +17,12 @@ import core.xml.model.EmployeeMapper;
 @Repository
 public class EmployeeDAOImpl implements EmployeeDAO {
 	private static final String INSERT_QUERY = "INSERT INTO employee (name, age) values (?, ?)";
-	private static final String SELECT_ALL_QUERY = "SELECT id, name, age FROM employee ORDER BY id";
+	private static final String SORTED_EMPLOYEES_QUERY = "SELECT id, name, age FROM employee ORDER BY LOWER(name), age, id";
+	private static final String SELECT_PAGE_QUERY = SORTED_EMPLOYEES_QUERY + " LIMIT ? OFFSET ?";
 	private static final String SELECT_BY_ID_QUERY = "SELECT id, name, age FROM employee WHERE id = ?";
 	private static final String UPDATE_QUERY = "UPDATE employee SET name = ?, age = ? WHERE id = ?";
 	private static final String DELETE_QUERY = "DELETE FROM employee WHERE id = ?";
+	private static final String COUNT_QUERY = "SELECT COUNT(*) FROM employee";
 	
 	// the EmployeeDAOImpl has a dependency on a JdbcTemplate
 	private JdbcTemplate jdbcTemplate;
@@ -66,7 +68,18 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
 	@Override
 	public List<Employee> findAllEmployees() {
-	    return jdbcTemplate.query(SELECT_ALL_QUERY, new EmployeeMapper());
+		return jdbcTemplate.query(SORTED_EMPLOYEES_QUERY, new EmployeeMapper());
+	}
+
+	@Override
+	public List<Employee> findEmployees(int limit, int offset) {
+		return jdbcTemplate.query(SELECT_PAGE_QUERY, new EmployeeMapper(), limit, offset);
+	}
+
+	@Override
+	public long countEmployees() {
+		Long count = jdbcTemplate.queryForObject(COUNT_QUERY, Long.class);
+		return count == null ? 0 : count;
 	}
 }
 

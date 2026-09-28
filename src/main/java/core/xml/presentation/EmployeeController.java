@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,8 @@ import core.xml.model.Employee;
 @Controller
 @RequestMapping("/employees")
 public class EmployeeController {
+	private static final int PAGE_SIZE = 10;
+	private static final int PAGE_WINDOW = 2;
 	private final EmployeeService employeeService;
 
 	public EmployeeController(EmployeeService employeeService) {
@@ -27,8 +30,21 @@ public class EmployeeController {
 	}
 
 	@GetMapping
-	public String listEmployees(Model model) {
-		model.addAttribute("employees", employeeService.findAllEmployees());
+	public String listEmployees(@RequestParam(defaultValue = "0") int page, Model model) {
+		long totalEmployees = employeeService.countEmployees();
+		int totalPages = (int) ((totalEmployees + PAGE_SIZE - 1) / PAGE_SIZE);
+		int currentPage = Math.max(0, Math.min(page, Math.max(0, totalPages - 1)));
+		int firstPage = Math.max(0, currentPage - PAGE_WINDOW);
+		int lastPage = Math.min(totalPages - 1, currentPage + PAGE_WINDOW);
+
+		model.addAttribute("employees", employeeService.findEmployees(PAGE_SIZE, currentPage * PAGE_SIZE));
+		model.addAttribute("totalEmployees", totalEmployees);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("totalPages", totalPages);
+		model.addAttribute("firstPage", firstPage);
+		model.addAttribute("lastPage", lastPage);
+		model.addAttribute("hasPrevious", currentPage > 0);
+		model.addAttribute("hasNext", currentPage + 1 < totalPages);
 		return "employees/list";
 	}
 

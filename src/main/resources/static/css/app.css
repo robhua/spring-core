@@ -108,6 +108,14 @@ td { height: 70px; padding: 10px 24px; border-top: 1px solid #e9ede6; font-size:
 .text-action { padding: 6px 0; border: 0; background: transparent; color: var(--forest); cursor: pointer; font-size: 12px; font-weight: 700; }
 .text-action:hover { text-decoration: underline; text-underline-offset: 3px; }
 .text-danger { color: var(--coral); }
+.pagination { min-height: 68px; padding: 12px 18px; display: flex; align-items: center; justify-content: center; gap: 7px; border-top: 1px solid var(--line); }
+.page-link { min-width: 36px; height: 36px; padding: 0 9px; display: inline-flex; align-items: center; justify-content: center; color: var(--forest-dark); border: 1px solid var(--line); border-radius: 3px; background: var(--surface); font-size: 12px; font-weight: 700; }
+.page-link:hover { border-color: var(--forest); }
+.page-link.is-current { color: #fff; border-color: var(--forest); background: var(--forest); }
+.page-link.is-disabled { color: #9ba49d; cursor: default; }
+.page-link.is-disabled:hover { border-color: var(--line); }
+.page-step { min-width: 68px; }
+.page-summary { display: none; color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
 .directory-footer { height: 39px; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; color: #8b968e; background: #f8f9f5; font-size: 8px; font-weight: 700; letter-spacing: .8px; }
 .empty-state { min-height: 250px; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 .empty-mark { width: 42px; height: 42px; margin-bottom: 14px; display: grid; place-items: center; color: var(--forest); border: 1px solid var(--line); border-radius: 50%; font-size: 20px; }
@@ -145,6 +153,10 @@ td { height: 70px; padding: 10px 24px; border-top: 1px solid #e9ede6; font-size:
   .directory-toolbar { padding: 18px; }
   th, td { padding-right: 14px; padding-left: 14px; }
   .row-actions { gap: 12px; }
+  .pagination { gap: 4px; padding: 12px 8px; }
+  .page-link { min-width: 32px; height: 34px; padding: 0 6px; }
+  .page-step { min-width: 56px; }
+  .page-summary { display: inline; margin: 0 4px; }
   .form-shell { padding-top: 28px; }
   .form-layout { grid-template-columns: 1fr; }
   .form-intro { min-height: auto; padding: 28px 24px; }

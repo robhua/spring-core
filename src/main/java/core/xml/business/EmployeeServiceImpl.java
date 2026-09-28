@@ -26,6 +26,16 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
+	public List<Employee> findEmployees(int limit, int offset) {
+		return employeeDAO.findEmployees(limit, offset);
+	}
+
+	@Override
+	public long countEmployees() {
+		return employeeDAO.countEmployees();
+	}
+
+	@Override
 	public Optional<Employee> findById(int empId) {
 		return employeeDAO.findById(empId);
 	}
