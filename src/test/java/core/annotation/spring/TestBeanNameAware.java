@@ -1,7 +1,8 @@
 package core.annotation.spring;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -38,7 +39,7 @@ abstract class MessageService implements BeanNameAware {
 
 @Component
 class EmailService extends MessageService {
-	private static final Logger LOG = Logger.getLogger(EmailService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(EmailService.class);
 
 	@Override
 	public void send(String message, String recepient) {
@@ -49,7 +50,7 @@ class EmailService extends MessageService {
 
 @Component
 class SMSService extends MessageService {
-	private static final Logger LOG = Logger.getLogger(SMSService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SMSService.class);
 
 	@Override
 	public void send(String message, String recepient) {
@@ -61,7 +62,7 @@ class SMSService extends MessageService {
 
 @Service
 class SomeService implements BeanFactoryAware{
-	private static final Logger LOG = Logger.getLogger(SomeService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SomeService.class);
 	
 	@Autowired
 	MessageService[] childs; // injecting all Child*

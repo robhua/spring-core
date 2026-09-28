@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ import core.annotation.model.Todo;
 
 @Service
 public class TodoBusinessServiceImpl implements TodoBusinessService {
-	private static final Logger logger = Logger.getLogger(TodoBusinessServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(TodoBusinessServiceImpl.class);
 	
 	private static final int ONE_DAY_IN_MINISECONDS = 24 * 60 * 1000;
 	@Autowired
