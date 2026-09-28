@@ -62,19 +62,19 @@ Cả cấu hình Spring Boot trong `application.properties` và cấu hình XML 
 
 | Biến | Mặc định | Ý nghĩa |
 | --- | --- | --- |
-| `DB_URL` | `jdbc:postgresql://localhost:5432/springcore` | JDBC URL |
+| `DB_URL` | `jdbc:postgresql://localhost:5432/mydb` | JDBC URL |
 | `DB_USERNAME` | `postgres` | Tên đăng nhập PostgreSQL |
-| `DB_PASSWORD` | rỗng | Mật khẩu PostgreSQL |
+| `DB_PASSWORD` | bắt buộc | Mật khẩu PostgreSQL; không đặt trong source |
 
 Ví dụ trên Linux/macOS:
 
 ```bash
-export DB_URL=jdbc:postgresql://localhost:5432/springcore
+export DB_URL=jdbc:postgresql://localhost:5432/mydb
 export DB_USERNAME=postgres
 export DB_PASSWORD='your-local-password'
 ```
 
-Không commit mật khẩu thật vào repository. Đảm bảo database `springcore` đã tồn tại trước khi chạy ứng dụng; ứng dụng tự tạo bảng `employee` nếu bảng chưa có.
+Không commit mật khẩu thật vào repository. Database PostgreSQL `mydb` phải tồn tại và user phải có quyền tạo bảng; ứng dụng tự tạo bảng `employee` nếu bảng chưa có. H2 chỉ được dùng trong test (`application-test.properties`), không phải cấu hình chạy bình thường.
 
 DAO truy vấn bảng `employee` với các cột `id`, `name`, `age`. Schema được khởi tạo an toàn bằng `CREATE TABLE IF NOT EXISTS` từ `src/main/resources/schema.sql`:
 
