@@ -11,8 +11,7 @@ import core.annotation.business.FooService;
 import core.annotation.business.PetStoreService;
 
 @SpringBootApplication(
-		scanBasePackages = "core.annotation",
-		excludeName = "org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration")
+		scanBasePackages = "core.annotation")
 public class Main {
 
 	public static void main(String[] args) {

@@ -4,7 +4,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan(basePackages="core.annotation")
+@ComponentScan(basePackages = {"core.annotation.business", "core.annotation.data"})
 //@ImportResource(locations="classpath:properties-config.xml")
 public class AppConfig {
 /*	@Bean
