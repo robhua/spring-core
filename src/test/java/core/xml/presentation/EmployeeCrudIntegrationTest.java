@@ -88,8 +88,9 @@ public class EmployeeCrudIntegrationTest {
 						.string(containsString("12")))
 				.andReturn();
 		String firstPage = firstPageResult.getResponse().getContentAsString();
-		int firstAlpha = firstPage.indexOf("Alpha Employee");
-		int secondAlpha = firstPage.indexOf("Alpha Employee", firstAlpha + 1);
+		String alphaNameCell = "<span class=\"person-name\">Alpha Employee</span>";
+		int firstAlpha = firstPage.indexOf(alphaNameCell);
+		int secondAlpha = firstPage.indexOf(alphaNameCell, firstAlpha + alphaNameCell.length());
 		int beta = firstPage.indexOf("Beta Employee");
 		assertTrue(firstAlpha >= 0 && secondAlpha > firstAlpha && beta > secondAlpha);
 		String firstAlphaRow = firstPage.substring(firstPage.lastIndexOf("<tr", firstAlpha), firstPage.indexOf("</tr>", firstAlpha));
@@ -104,6 +105,33 @@ public class EmployeeCrudIntegrationTest {
 						.string(containsString("Employee 9")))
 				.andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content()
 						.string(containsString("2 / 2")));
+	}
+
+	@Test
+	public void mvcCanDeleteSeveralSelectedEmployees() throws Exception {
+		jdbcTemplate.update("INSERT INTO employee (name, age) VALUES (?, ?)", "Remove One", 24);
+		jdbcTemplate.update("INSERT INTO employee (name, age) VALUES (?, ?)", "Remove Two", 31);
+		jdbcTemplate.update("INSERT INTO employee (name, age) VALUES (?, ?)", "Keep This", 42);
+		Integer[] employeeIds = jdbcTemplate.queryForList("SELECT id FROM employee WHERE name LIKE 'Remove %'", Integer.class)
+				.toArray(new Integer[0]);
+
+		mockMvc.perform(post("/employees/delete").param("ids",
+					java.util.Arrays.stream(employeeIds).map(String::valueOf).toArray(String[]::new)))
+				.andExpect(status().is3xxRedirection());
+
+		assertTrue(jdbcTemplate.queryForObject("SELECT COUNT(*) FROM employee", Integer.class) == 1);
+		assertTrue(jdbcTemplate.queryForObject("SELECT COUNT(*) FROM employee WHERE name = 'Keep This'", Integer.class) == 1);
+	}
+
+	@Test
+	public void mvcBulkDeleteWithoutSelectionKeepsEmployees() throws Exception {
+		jdbcTemplate.update("INSERT INTO employee (name, age) VALUES (?, ?)", "Keep This", 42);
+
+		mockMvc.perform(post("/employees/delete").param("page", "1"))
+				.andExpect(status().is3xxRedirection())
+				.andExpect(header().string("Location", "/employees?page=1"));
+
+		assertTrue(jdbcTemplate.queryForObject("SELECT COUNT(*) FROM employee", Integer.class) == 1);
 	}
 
 	@Test

@@ -14,6 +14,8 @@ public interface EmployeeDAO {
 
 	public int deleteById(int empId);
 
+	public int deleteByIds(List<Integer> employeeIds);
+
 	public List<Employee> findAllEmployees();
 
 	public List<Employee> findEmployees(int limit, int offset);

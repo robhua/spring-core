@@ -7,6 +7,8 @@ import java.util.Optional;
 
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -26,10 +28,12 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 	
 	// the EmployeeDAOImpl has a dependency on a JdbcTemplate
 	private JdbcTemplate jdbcTemplate;
+	private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	// a constructor so that the Spring container can inject a JdbcTemplate
 	public EmployeeDAOImpl(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
+		this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
 	}
 
 	@Override
@@ -64,6 +68,16 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 	@Override
 	public int deleteById(int empId) {
 		return jdbcTemplate.update(DELETE_QUERY, empId);
+	}
+
+	@Override
+	public int deleteByIds(List<Integer> employeeIds) {
+		if (employeeIds == null || employeeIds.isEmpty()) {
+			return 0;
+		}
+		return namedParameterJdbcTemplate.update(
+				"DELETE FROM employee WHERE id IN (:ids)",
+				new MapSqlParameterSource("ids", employeeIds));
 	}
 
 	@Override

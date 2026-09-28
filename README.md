@@ -46,7 +46,7 @@ Khởi chạy ứng dụng web:
 mvn spring-boot:run
 ```
 
-Mở [http://localhost:8080/employees](http://localhost:8080/employees) để quản lý hồ sơ. Danh sách hiển thị 10 hồ sơ mỗi trang, sắp theo tên A-Z rồi tuổi tăng dần; giao diện cũng hỗ trợ thêm, sửa, xóa và kiểm tra dữ liệu đầu vào.
+Mở [http://localhost:8080/employees](http://localhost:8080/employees) để quản lý hồ sơ. Danh sách hiển thị 10 hồ sơ mỗi trang, sắp theo tên A-Z rồi tuổi tăng dần; có thể chọn nhiều hồ sơ trên trang để xóa cùng lúc. Giao diện cũng hỗ trợ thêm, sửa, xóa đơn lẻ và kiểm tra dữ liệu đầu vào.
 
 Chạy test và đóng gói:
 

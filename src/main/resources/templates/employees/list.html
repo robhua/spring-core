@@ -28,6 +28,7 @@
     </section>
 
     <div class="notice" th:if="${successMessage}" th:text="${successMessage}" role="status"></div>
+    <div class="notice notice-warning" th:if="${warningMessage}" th:text="${warningMessage}" role="alert"></div>
 
     <section class="directory" aria-labelledby="directory-title">
       <div class="directory-toolbar">
@@ -39,12 +40,29 @@
       </div>
 
       <div class="table-wrap" th:if="${!#lists.isEmpty(employees)}">
+        <div class="selection-toolbar">
+          <label class="select-all-control">
+            <input id="select-all-employees" type="checkbox" aria-label="Chọn tất cả nhân viên trên trang">
+            <span>Chọn tất cả trên trang</span>
+          </label>
+          <span id="selected-employee-count" class="selection-count" aria-live="polite">0 đã chọn</span>
+          <form id="bulk-delete-form" th:action="@{/employees/delete}" method="post">
+            <input type="hidden" name="page" th:value="${currentPage}">
+            <button id="bulk-delete-button" class="button button-delete" type="submit" disabled>
+              Xóa đã chọn
+            </button>
+          </form>
+        </div>
         <table>
           <thead>
-            <tr><th>MÃ</th><th>NHÂN VIÊN</th><th>TUỔI</th><th class="actions-heading">THAO TÁC</th></tr>
+            <tr><th>CHỌN</th><th>MÃ</th><th>NHÂN VIÊN</th><th>TUỔI</th><th class="actions-heading">THAO TÁC</th></tr>
           </thead>
           <tbody>
             <tr th:each="employee : ${employees}">
+              <td>
+                <input class="employee-select" type="checkbox" name="ids" form="bulk-delete-form"
+                       th:value="${employee.empId}" th:attr="aria-label=${'Chọn ' + employee.empName}">
+              </td>
               <td class="employee-id" th:text="${#numbers.formatInteger(employee.empId, 4)}">0001</td>
               <td>
                 <div class="person-cell">
@@ -57,6 +75,7 @@
                 <a class="text-action" th:href="@{/employees/{id}/edit(id=${employee.empId})}">Sửa</a>
                 <form th:action="@{/employees/{id}/delete(id=${employee.empId})}" method="post"
                       onsubmit="return confirm('Xóa hồ sơ nhân viên này?')">
+                  <input type="hidden" name="page" th:value="${currentPage}">
                   <button class="text-action text-danger" type="submit">Xóa</button>
                 </form>
               </td>
@@ -87,5 +106,37 @@
       <footer class="directory-footer"><span>SPRING CORE</span><span>QUẢN LÝ HỒ SƠ</span></footer>
     </section>
   </main>
+  <script>
+    (() => {
+      const bulkForm = document.getElementById("bulk-delete-form");
+      if (!bulkForm) return;
+
+      const rowCheckboxes = Array.from(document.querySelectorAll(".employee-select"));
+      const selectAll = document.getElementById("select-all-employees");
+      const deleteButton = document.getElementById("bulk-delete-button");
+      const selectedCount = document.getElementById("selected-employee-count");
+
+      const updateSelection = () => {
+        const checkedCount = rowCheckboxes.filter((checkbox) => checkbox.checked).length;
+        deleteButton.disabled = checkedCount === 0;
+        selectedCount.textContent = `${checkedCount} đã chọn`;
+        selectAll.checked = rowCheckboxes.length > 0 && checkedCount === rowCheckboxes.length;
+        selectAll.indeterminate = checkedCount > 0 && checkedCount < rowCheckboxes.length;
+      };
+
+      selectAll.addEventListener("change", () => {
+        rowCheckboxes.forEach((checkbox) => { checkbox.checked = selectAll.checked; });
+        updateSelection();
+      });
+      rowCheckboxes.forEach((checkbox) => checkbox.addEventListener("change", updateSelection));
+      bulkForm.addEventListener("submit", (event) => {
+        const checkedCount = rowCheckboxes.filter((checkbox) => checkbox.checked).length;
+        if (checkedCount === 0 || !confirm(`Xóa ${checkedCount} nhân viên đã chọn?`)) {
+          event.preventDefault();
+        }
+      });
+      updateSelection();
+    })();
+  </script>
 </body>
 </html>

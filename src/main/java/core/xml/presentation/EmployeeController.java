@@ -2,6 +2,8 @@ package core.xml.presentation;
 
 import jakarta.validation.Valid;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -90,12 +92,30 @@ public class EmployeeController {
 	}
 
 	@PostMapping("/{id}/delete")
-	public String deleteEmployee(@PathVariable int id, RedirectAttributes redirectAttributes) {
+	public String deleteEmployee(@PathVariable int id, @RequestParam(defaultValue = "0") int page,
+			RedirectAttributes redirectAttributes) {
 		if (!employeeService.deleteById(id)) {
 			throw notFound(id);
 		}
 		redirectAttributes.addFlashAttribute("successMessage", "Đã xóa nhân viên.");
-		return "redirect:/employees";
+		return employeeListPage(page);
+	}
+
+	@PostMapping("/delete")
+	public String deleteEmployees(@RequestParam(name = "ids", required = false) List<Integer> employeeIds,
+			@RequestParam(defaultValue = "0") int page, RedirectAttributes redirectAttributes) {
+		if (employeeIds == null || employeeIds.isEmpty()) {
+			redirectAttributes.addFlashAttribute("warningMessage", "Chọn ít nhất một nhân viên để xóa.");
+			return employeeListPage(page);
+		}
+
+		int deletedCount = employeeService.deleteByIds(employeeIds);
+		redirectAttributes.addFlashAttribute("successMessage", "Đã xóa " + deletedCount + " nhân viên.");
+		return employeeListPage(page);
+	}
+
+	private String employeeListPage(int page) {
+		return "redirect:/employees?page=" + Math.max(page, 0);
 	}
 
 	private String employeeForm(Model model, Employee employee, String formAction, String title, String submitLabel) {

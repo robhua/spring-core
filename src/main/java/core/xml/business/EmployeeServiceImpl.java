@@ -49,4 +49,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public boolean deleteById(int empId) {
 		return employeeDAO.deleteById(empId) > 0;
 	}
+
+	@Override
+	public int deleteByIds(List<Integer> employeeIds) {
+		return employeeDAO.deleteByIds(employeeIds);
+	}
 }

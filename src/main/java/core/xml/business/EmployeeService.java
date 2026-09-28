@@ -21,4 +21,6 @@ public interface EmployeeService {
 
 	public boolean deleteById(int empId);
 
+	public int deleteByIds(List<Integer> employeeIds);
+
 }
