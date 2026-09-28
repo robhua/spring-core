@@ -46,7 +46,11 @@ Khởi chạy ứng dụng web:
 mvn spring-boot:run
 ```
 
-Mở [http://localhost:8080/employees](http://localhost:8080/employees) để quản lý hồ sơ. Danh sách hiển thị 10 hồ sơ mỗi trang, sắp theo tên A-Z rồi tuổi tăng dần; có thể chọn nhiều hồ sơ trên trang để xóa cùng lúc. Giao diện cũng hỗ trợ thêm, sửa, xóa đơn lẻ và kiểm tra dữ liệu đầu vào. Label và thông báo giao diện được khai báo trong `src/main/resources/messages.properties`.
+Chuyển ngôn ngữ bằng nút `EN`/`VI` ở góc trên. Lựa chọn được lưu trong session; giao diện mặc định là tiếng Việt.
+
+Mở [http://localhost:8080/employees](http://localhost:8080/employees) để quản lý hồ sơ. Dùng nút `EN`/`VI` ở header để đổi ngôn ngữ; lựa chọn được lưu theo session và mặc định là tiếng Việt. Nội dung tiếng Anh nằm trong `messages.properties`, tiếng Việt trong `messages_vi.properties`.
+
+Danh sách hiển thị 10 hồ sơ mỗi trang, sắp theo tên A-Z rồi tuổi tăng dần; có thể chọn nhiều hồ sơ trên trang để xóa cùng lúc. Giao diện cũng hỗ trợ thêm, sửa, xóa đơn lẻ và kiểm tra dữ liệu đầu vào.
 
 Chạy test và đóng gói:
 

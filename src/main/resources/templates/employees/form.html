@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,7 +12,15 @@
       <span class="brand-mark" th:text="#{app.brand.mark}"></span>
       <span><span th:text="#{app.brand.name}"></span> <small th:text="#{app.brand.section}"></small></span>
     </a>
-    <a class="topbar-link" th:href="@{/employees}" th:text="#{employees.title}"></a>
+    <div class="topbar-tools">
+      <a class="topbar-link" th:href="@{/employees}" th:text="#{employees.title}"></a>
+      <nav class="language-switch" th:attr="aria-label=#{language.switch.aria}">
+        <a th:href="@{/employees(lang='en')}" th:classappend="${#locale.language == 'en'} ? ' is-active' : ''"
+           th:attr="aria-label=#{language.english},aria-current=${#locale.language == 'en'} ? 'page' : null">EN</a>
+        <a th:href="@{/employees(lang='vi')}" th:classappend="${#locale.language == 'vi'} ? ' is-active' : ''"
+           th:attr="aria-label=#{language.vietnamese},aria-current=${#locale.language == 'vi'} ? 'page' : null">VI</a>
+      </nav>
+    </div>
   </header>
 
   <main class="page-shell form-shell">

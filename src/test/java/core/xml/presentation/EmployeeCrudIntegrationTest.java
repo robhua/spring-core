@@ -20,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MvcResult;
@@ -78,6 +79,30 @@ public class EmployeeCrudIntegrationTest {
 				.andExpect(status().isOk())
 				.andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content()
 						.string(containsString("Chưa có hồ sơ nào")));
+	}
+
+	@Test
+	public void languageSwitchChangesMessagesAndPersistsInSession() throws Exception {
+		jdbcTemplate.update("INSERT INTO employee (name, age) VALUES (?, ?)", "Locale Test Employee", 29);
+		MvcResult englishResult = mockMvc.perform(get("/employees").param("lang", "en"))
+				.andExpect(status().isOk())
+				.andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content()
+						.string(containsString("Employee directory")))
+				.andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content()
+						.string(containsString("Select all on this page")))
+				.andReturn();
+		MockHttpSession localeSession = (MockHttpSession) englishResult.getRequest().getSession(false);
+		assertTrue(localeSession != null);
+
+		mockMvc.perform(get("/employees").session(localeSession))
+				.andExpect(status().isOk())
+				.andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content()
+						.string(containsString("Employee directory")));
+
+		mockMvc.perform(get("/employees").session(localeSession).param("lang", "vi"))
+				.andExpect(status().isOk())
+				.andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content()
+						.string(containsString("Danh bạ nhân viên")));
 	}
 
 	@Test
