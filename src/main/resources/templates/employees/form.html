@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${pageTitle} + ' · Spring Core'">Hồ sơ nhân viên</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" th:href="@{/employees}" aria-label="Spring Core, trang nhân viên">
+      <span class="brand-mark">SC</span>
+      <span>Spring Core <small>PEOPLE DIRECTORY</small></span>
+    </a>
+    <a class="topbar-link" th:href="@{/employees}">Danh bạ nhân viên</a>
+  </header>
+
+  <main class="page-shell form-shell">
+    <a class="back-link" th:href="@{/employees}"><span aria-hidden="true">←</span> Tất cả hồ sơ</a>
+    <section class="form-layout">
+      <div class="form-intro">
+        <p class="eyebrow">HỒ SƠ NHÂN VIÊN <span> / </span> CẬP NHẬT</p>
+        <h1 th:text="${pageTitle}">Thêm nhân viên</h1>
+        <p>Thông tin được lưu trực tiếp vào danh bạ nội bộ.</p>
+        <div class="form-index"><span>01</span><span>THÔNG TIN CƠ BẢN</span></div>
+      </div>
+
+      <form class="employee-form" th:action="${formAction}" th:object="${employee}" method="post">
+        <div class="field-group">
+          <label for="empName">Họ và tên <span>*</span></label>
+          <input id="empName" type="text" th:field="*{empName}" maxlength="255"
+                 placeholder="Ví dụ: Nguyễn Minh An" autocomplete="name" required>
+          <small class="field-error" th:if="${#fields.hasErrors('empName')}" th:errors="*{empName}"></small>
+        </div>
+        <div class="field-group field-age">
+          <label for="age">Tuổi <span>*</span></label>
+          <div class="age-input-wrap">
+            <input id="age" type="number" th:field="*{age}" min="0" max="120" required>
+            <span>tuổi</span>
+          </div>
+          <small class="field-error" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></small>
+        </div>
+        <div class="form-actions">
+          <a class="button button-quiet" th:href="@{/employees}">Hủy</a>
+          <button class="button button-primary" type="submit" th:text="${submitLabel}">Lưu hồ sơ</button>
+        </div>
+      </form>
+    </section>
+    <p class="form-note"><span>*</span> Trường bắt buộc</p>
+  </main>
+</body>
+</html>

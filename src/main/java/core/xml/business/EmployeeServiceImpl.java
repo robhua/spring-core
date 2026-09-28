@@ -1,27 +1,42 @@
 package core.xml.business;
 
 import java.util.List;
+import java.util.Optional;
 
 import core.xml.data.EmployeeDAO;
 import core.xml.model.Employee;
+import org.springframework.stereotype.Service;
 
+@Service
 public class EmployeeServiceImpl implements EmployeeService {
-	// the EmployeeServiceImpl has a dependency on the EmployeeDAO
-	private EmployeeDAO employeeDAO;
+	private final EmployeeDAO employeeDAO;
 
-	@Override
-	public int save(Employee emp) {
-		// TODO Auto-generated method stub
-		return 0;
+	public EmployeeServiceImpl(EmployeeDAO employeeDAO) {
+		this.employeeDAO = employeeDAO;
 	}
 
-	// a setter method so that the Spring container can inject a EmployeeDAO
-	public void setEmployeeDAO(EmployeeDAO employeeDAO) {
-		this.employeeDAO = employeeDAO;
+	@Override
+	public Employee save(Employee employee) {
+		return employeeDAO.save(employee);
 	}
 
 	@Override
 	public List<Employee> findAllEmployees() {
 		return employeeDAO.findAllEmployees();
+	}
+
+	@Override
+	public Optional<Employee> findById(int empId) {
+		return employeeDAO.findById(empId);
+	}
+
+	@Override
+	public boolean update(Employee employee) {
+		return employeeDAO.update(employee) > 0;
+	}
+
+	@Override
+	public boolean deleteById(int empId) {
+		return employeeDAO.deleteById(empId) > 0;
 	}
 }

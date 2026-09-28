@@ -1,8 +1,17 @@
 package core.xml.model;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class Employee {
 	private int empId;
+	@NotBlank(message = "Tên nhân viên không được để trống")
+	@Size(max = 255, message = "Tên nhân viên không được dài quá 255 ký tự")
 	private String empName;
+	@Min(value = 0, message = "Tuổi không được là số âm")
+	@Max(value = 120, message = "Tuổi phải nhỏ hơn hoặc bằng 120")
 	private int age;
 
 	public int getEmpId() {

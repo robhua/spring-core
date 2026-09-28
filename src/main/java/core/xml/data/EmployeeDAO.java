@@ -1,15 +1,18 @@
 package core.xml.data;
 
 import java.util.List;
+import java.util.Optional;
 
 import core.xml.model.Employee;
 
 public interface EmployeeDAO {
-	public int save(Employee employee);
+	public Employee save(Employee employee);
 
-	public void update(Employee employee);
+	public Optional<Employee> findById(int empId);
 
-	public void deleteEmpById(int empId);
+	public int update(Employee employee);
+
+	public int deleteById(int empId);
 
 	public List<Employee> findAllEmployees();
 }

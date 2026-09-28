@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Danh bạ nhân viên</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" th:href="@{/employees}" aria-label="Spring Core, trang nhân viên">
+      <span class="brand-mark">SC</span>
+      <span>Spring Core <small>PEOPLE DIRECTORY</small></span>
+    </a>
+    <span class="topbar-status"><span class="status-dot"></span> Hồ sơ nội bộ</span>
+  </header>
+
+  <main class="page-shell">
+    <section class="page-heading">
+      <div>
+        <p class="eyebrow">QUẢN TRỊ NHÂN SỰ <span> / </span> HỒ SƠ</p>
+        <h1>Danh bạ <em>nhân viên</em></h1>
+        <p class="heading-copy">Danh sách hồ sơ đang được quản lý trong hệ thống.</p>
+      </div>
+      <a class="button button-primary" th:href="@{/employees/new}">
+        <span class="button-symbol" aria-hidden="true">+</span> Thêm nhân viên
+      </a>
+    </section>
+
+    <div class="notice" th:if="${successMessage}" th:text="${successMessage}" role="status"></div>
+
+    <section class="directory" aria-labelledby="directory-title">
+      <div class="directory-toolbar">
+        <div>
+          <h2 id="directory-title">Toàn bộ hồ sơ</h2>
+          <p>Dữ liệu được sắp xếp theo mã nhân viên.</p>
+        </div>
+        <div class="record-count"><strong th:text="${#lists.size(employees)}">0</strong><span>HỒ SƠ</span></div>
+      </div>
+
+      <div class="table-wrap" th:if="${!#lists.isEmpty(employees)}">
+        <table>
+          <thead>
+            <tr><th>MÃ</th><th>NHÂN VIÊN</th><th>TUỔI</th><th class="actions-heading">THAO TÁC</th></tr>
+          </thead>
+          <tbody>
+            <tr th:each="employee : ${employees}">
+              <td class="employee-id" th:text="${#numbers.formatInteger(employee.empId, 4)}">0001</td>
+              <td>
+                <div class="person-cell">
+                  <span class="avatar" th:text="${#strings.substring(employee.empName, 0, 1).toUpperCase()}">A</span>
+                  <span class="person-name" th:text="${employee.empName}">Nguyễn An</span>
+                </div>
+              </td>
+              <td><span class="age-value" th:text="${employee.age}">30</span><span class="age-unit"> tuổi</span></td>
+              <td class="row-actions">
+                <a class="text-action" th:href="@{/employees/{id}/edit(id=${employee.empId})}">Sửa</a>
+                <form th:action="@{/employees/{id}/delete(id=${employee.empId})}" method="post"
+                      onsubmit="return confirm('Xóa hồ sơ nhân viên này?')">
+                  <button class="text-action text-danger" type="submit">Xóa</button>
+                </form>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="empty-state" th:if="${#lists.isEmpty(employees)}">
+        <span class="empty-mark" aria-hidden="true">—</span>
+        <h3>Chưa có hồ sơ nào</h3>
+        <p>Bắt đầu bằng cách thêm nhân viên đầu tiên vào danh bạ.</p>
+        <a class="button button-secondary" th:href="@{/employees/new}">Tạo hồ sơ đầu tiên</a>
+      </div>
+      <footer class="directory-footer"><span>SPRING CORE</span><span>QUẢN LÝ HỒ SƠ</span></footer>
+    </section>
+  </main>
+</body>
+</html>

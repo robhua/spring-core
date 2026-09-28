@@ -6,7 +6,7 @@
 
 	<!-- Instantiation with a Constructor -->
 	<bean id="employeeService" class="core.xml.business.EmployeeServiceImpl">
-		<property name="employeeDAO" ref="employeeDAO" />
+		<constructor-arg ref="employeeDAO" />
 	</bean>
 
 </beans>
