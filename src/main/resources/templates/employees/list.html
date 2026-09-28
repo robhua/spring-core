@@ -5,23 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title th:text="|#{employees.title} · #{app.brand.name}|"></title>
   <link rel="stylesheet" th:href="@{/css/app.css}">
+  <link rel="stylesheet" th:href="@{/css/pages/employee-management.css}">
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" th:href="@{/employees}" th:attr="aria-label=#{app.brand.aria}">
-      <span class="brand-mark" th:text="#{app.brand.mark}"></span>
-      <span><span th:text="#{app.brand.name}"></span> <small th:text="#{app.brand.section}"></small></span>
-    </a>
-    <div class="topbar-tools">
-      <span class="topbar-status"><span class="status-dot"></span> <span th:text="#{app.status.internal}"></span></span>
-      <nav class="language-switch" th:attr="aria-label=#{language.switch.aria}">
-        <a th:href="@{/employees(lang='en')}" th:classappend="${#locale.language == 'en'} ? ' is-active' : ''"
-           th:attr="aria-label=#{language.english},aria-current=${#locale.language == 'en'} ? 'page' : null">EN</a>
-        <a th:href="@{/employees(lang='vi')}" th:classappend="${#locale.language == 'vi'} ? ' is-active' : ''"
-           th:attr="aria-label=#{language.vietnamese},aria-current=${#locale.language == 'vi'} ? 'page' : null">VI</a>
-      </nav>
-    </div>
-  </header>
+  <header th:replace="~{fragments/site-header :: siteHeader(true, false)}"></header>
 
   <main class="page-shell">
     <section class="page-heading">
@@ -116,42 +103,6 @@
       <footer class="directory-footer"><span th:text="#{app.brand.name}"></span><span th:text="#{employees.footer}"></span></footer>
     </section>
   </main>
-  <script>
-    (() => {
-      const bulkForm = document.getElementById("bulk-delete-form");
-      if (!bulkForm) return;
-
-      const rowCheckboxes = Array.from(document.querySelectorAll(".employee-select"));
-      const selectAll = document.getElementById("select-all-employees");
-      const deleteButton = document.getElementById("bulk-delete-button");
-      const selectedCount = document.getElementById("selected-employee-count");
-
-      const updateSelection = () => {
-        const checkedCount = rowCheckboxes.filter((checkbox) => checkbox.checked).length;
-        deleteButton.disabled = checkedCount === 0;
-        selectedCount.textContent = selectedCount.dataset.countTemplate.replace("{0}", checkedCount);
-        selectAll.checked = rowCheckboxes.length > 0 && checkedCount === rowCheckboxes.length;
-        selectAll.indeterminate = checkedCount > 0 && checkedCount < rowCheckboxes.length;
-      };
-
-      selectAll.addEventListener("change", () => {
-        rowCheckboxes.forEach((checkbox) => { checkbox.checked = selectAll.checked; });
-        updateSelection();
-      });
-      rowCheckboxes.forEach((checkbox) => checkbox.addEventListener("change", updateSelection));
-      bulkForm.addEventListener("submit", (event) => {
-        const checkedCount = rowCheckboxes.filter((checkbox) => checkbox.checked).length;
-        if (checkedCount === 0 || !confirm(bulkForm.dataset.confirmMessage)) {
-          event.preventDefault();
-        }
-      });
-      document.querySelectorAll(".single-delete-form").forEach((form) => {
-        form.addEventListener("submit", (event) => {
-          if (!confirm(form.dataset.confirmMessage)) event.preventDefault();
-        });
-      });
-      updateSelection();
-    })();
-  </script>
+  <script defer th:src="@{/js/pages/employee-directory.js}"></script>
 </body>
 </html>

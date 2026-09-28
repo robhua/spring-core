@@ -20,6 +20,13 @@ src/main/resources/
   application.properties  Cấu hình datasource cho Spring Boot
   beans*.xml              Cấu hình Spring XML
   jdbc.properties         Cấu hình datasource XML
+  messages*.properties    Nội dung English và Tiếng Việt
+  templates/
+    fragments/            Thymeleaf fragments dùng chung
+    employees/            Trang danh sách và form
+  static/
+    css/                   Base/layout/components và styles theo page
+    js/pages/              JavaScript theo từng trang
 src/test/                  Unit và Spring context tests
 ```
 
