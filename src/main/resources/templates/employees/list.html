@@ -3,27 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Danh bạ nhân viên</title>
+  <title th:text="|#{employees.title} · #{app.brand.name}|"></title>
   <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" th:href="@{/employees}" aria-label="Spring Core, trang nhân viên">
-      <span class="brand-mark">SC</span>
-      <span>Spring Core <small>PEOPLE DIRECTORY</small></span>
+    <a class="brand" th:href="@{/employees}" th:attr="aria-label=#{app.brand.aria}">
+      <span class="brand-mark" th:text="#{app.brand.mark}"></span>
+      <span><span th:text="#{app.brand.name}"></span> <small th:text="#{app.brand.section}"></small></span>
     </a>
-    <span class="topbar-status"><span class="status-dot"></span> Hồ sơ nội bộ</span>
+    <span class="topbar-status"><span class="status-dot"></span> <span th:text="#{app.status.internal}"></span></span>
   </header>
 
   <main class="page-shell">
     <section class="page-heading">
       <div>
-        <p class="eyebrow">QUẢN TRỊ NHÂN SỰ <span> / </span> HỒ SƠ</p>
-        <h1>Danh bạ <em>nhân viên</em></h1>
-        <p class="heading-copy">Danh sách hồ sơ đang được quản lý trong hệ thống.</p>
+        <p class="eyebrow" th:text="#{employees.eyebrow}"></p>
+        <h1 th:text="#{employees.title}"></h1>
+        <p class="heading-copy" th:text="#{employees.description}"></p>
       </div>
       <a class="button button-primary" th:href="@{/employees/new}">
-        <span class="button-symbol" aria-hidden="true">+</span> Thêm nhân viên
+        <span class="button-symbol" aria-hidden="true">+</span> <span th:text="#{employee.action.create}"></span>
       </a>
     </section>
 
@@ -33,50 +33,52 @@
     <section class="directory" aria-labelledby="directory-title">
       <div class="directory-toolbar">
         <div>
-          <h2 id="directory-title">Toàn bộ hồ sơ</h2>
-          <p>Sắp xếp theo tên A-Z, sau đó theo tuổi tăng dần · 10 hồ sơ mỗi trang.</p>
+          <h2 id="directory-title" th:text="#{employees.list.title}"></h2>
+          <p th:text="#{employees.list.description}"></p>
         </div>
-        <div class="record-count"><strong th:text="${totalEmployees}">0</strong><span>HỒ SƠ</span></div>
+        <div class="record-count"><strong th:text="${totalEmployees}">0</strong><span th:text="#{employees.list.countLabel}"></span></div>
       </div>
 
       <div class="table-wrap" th:if="${!#lists.isEmpty(employees)}">
         <div class="selection-toolbar">
           <label class="select-all-control">
-            <input id="select-all-employees" type="checkbox" aria-label="Chọn tất cả nhân viên trên trang">
-            <span>Chọn tất cả trên trang</span>
+            <input id="select-all-employees" type="checkbox" th:attr="aria-label=#{employee.selection.selectAll.aria}">
+            <span th:text="#{employee.selection.selectPage}"></span>
           </label>
-          <span id="selected-employee-count" class="selection-count" aria-live="polite">0 đã chọn</span>
-          <form id="bulk-delete-form" th:action="@{/employees/delete}" method="post">
+          <span id="selected-employee-count" class="selection-count" aria-live="polite"
+                th:attr="data-count-template=#{employee.selection.count}"></span>
+          <form id="bulk-delete-form" th:action="@{/employees/delete}" method="post"
+                th:attr="data-confirm-message=#{employee.bulkDelete.confirm}">
             <input type="hidden" name="page" th:value="${currentPage}">
             <button id="bulk-delete-button" class="button button-delete" type="submit" disabled>
-              Xóa đã chọn
+              <span th:text="#{employee.action.deleteSelected}"></span>
             </button>
           </form>
         </div>
         <table>
           <thead>
-            <tr><th>CHỌN</th><th>MÃ</th><th>NHÂN VIÊN</th><th>TUỔI</th><th class="actions-heading">THAO TÁC</th></tr>
+            <tr><th th:text="#{employee.table.select}"></th><th th:text="#{employee.table.id}"></th><th th:text="#{employee.table.name}"></th><th th:text="#{employee.table.age}"></th><th class="actions-heading" th:text="#{employee.table.actions}"></th></tr>
           </thead>
           <tbody>
             <tr th:each="employee : ${employees}">
               <td>
                 <input class="employee-select" type="checkbox" name="ids" form="bulk-delete-form"
-                       th:value="${employee.empId}" th:attr="aria-label=${'Chọn ' + employee.empName}">
+                       th:value="${employee.empId}" th:attr="aria-label=#{employee.selection.selectOne(${employee.empName})}">
               </td>
-              <td class="employee-id" th:text="${#numbers.formatInteger(employee.empId, 4)}">0001</td>
+              <td class="employee-id" th:text="${#numbers.formatInteger(employee.empId, 4)}"></td>
               <td>
                 <div class="person-cell">
-                  <span class="avatar" th:text="${#strings.substring(employee.empName, 0, 1).toUpperCase()}">A</span>
-                  <span class="person-name" th:text="${employee.empName}">Nguyễn An</span>
+                  <span class="avatar" th:text="${#strings.substring(employee.empName, 0, 1).toUpperCase()}"></span>
+                  <span class="person-name" th:text="${employee.empName}"></span>
                 </div>
               </td>
-              <td><span class="age-value" th:text="${employee.age}">30</span><span class="age-unit"> tuổi</span></td>
+              <td><span class="age-value" th:text="${employee.age}"></span><span class="age-unit" th:text="#{employee.age.unit}"></span></td>
               <td class="row-actions">
-                <a class="text-action" th:href="@{/employees/{id}/edit(id=${employee.empId})}">Sửa</a>
+                <a class="text-action" th:href="@{/employees/{id}/edit(id=${employee.empId})}" th:text="#{employee.action.edit}"></a>
                 <form th:action="@{/employees/{id}/delete(id=${employee.empId})}" method="post"
-                      onsubmit="return confirm('Xóa hồ sơ nhân viên này?')">
+                      class="single-delete-form" th:attr="data-confirm-message=#{employee.delete.confirm}">
                   <input type="hidden" name="page" th:value="${currentPage}">
-                  <button class="text-action text-danger" type="submit">Xóa</button>
+                  <button class="text-action text-danger" type="submit" th:text="#{employee.action.delete}"></button>
                 </form>
               </td>
             </tr>
@@ -86,24 +88,24 @@
 
       <div class="empty-state" th:if="${#lists.isEmpty(employees)}">
         <span class="empty-mark" aria-hidden="true">—</span>
-        <h3>Chưa có hồ sơ nào</h3>
-        <p>Bắt đầu bằng cách thêm nhân viên đầu tiên vào danh bạ.</p>
-        <a class="button button-secondary" th:href="@{/employees/new}">Tạo hồ sơ đầu tiên</a>
+        <h3 th:text="#{employees.empty.title}"></h3>
+        <p th:text="#{employees.empty.description}"></p>
+        <a class="button button-secondary" th:href="@{/employees/new}" th:text="#{employees.empty.action}"></a>
       </div>
 
-      <nav class="pagination" th:if="${totalPages > 1}" aria-label="Phân trang danh sách nhân viên">
-        <a class="page-link page-step" th:if="${hasPrevious}" th:href="@{/employees(page=${currentPage - 1})}">Trước</a>
-        <span class="page-link page-step is-disabled" th:unless="${hasPrevious}" aria-disabled="true">Trước</span>
+      <nav class="pagination" th:if="${totalPages > 1}" th:attr="aria-label=#{employees.pagination.aria}">
+        <a class="page-link page-step" th:if="${hasPrevious}" th:href="@{/employees(page=${currentPage - 1})}" th:text="#{employees.pagination.previous}"></a>
+        <span class="page-link page-step is-disabled" th:unless="${hasPrevious}" aria-disabled="true" th:text="#{employees.pagination.previous}"></span>
         <a class="page-link" th:each="pageNumber : ${#numbers.sequence(firstPage, lastPage)}"
            th:href="@{/employees(page=${pageNumber})}"
            th:classappend="${pageNumber == currentPage} ? ' is-current' : ''"
            th:attr="aria-current=${pageNumber == currentPage} ? 'page' : null"
-           th:text="${pageNumber + 1}">1</a>
-        <span class="page-summary" th:text="|${currentPage + 1} / ${totalPages}|">1 / 2</span>
-        <a class="page-link page-step" th:if="${hasNext}" th:href="@{/employees(page=${currentPage + 1})}">Tiếp</a>
-        <span class="page-link page-step is-disabled" th:unless="${hasNext}" aria-disabled="true">Tiếp</span>
+           th:text="${pageNumber + 1}"></a>
+        <span class="page-summary" th:text="|${currentPage + 1} / ${totalPages}|"></span>
+        <a class="page-link page-step" th:if="${hasNext}" th:href="@{/employees(page=${currentPage + 1})}" th:text="#{employees.pagination.next}"></a>
+        <span class="page-link page-step is-disabled" th:unless="${hasNext}" aria-disabled="true" th:text="#{employees.pagination.next}"></span>
       </nav>
-      <footer class="directory-footer"><span>SPRING CORE</span><span>QUẢN LÝ HỒ SƠ</span></footer>
+      <footer class="directory-footer"><span th:text="#{app.brand.name}"></span><span th:text="#{employees.footer}"></span></footer>
     </section>
   </main>
   <script>
@@ -119,7 +121,7 @@
       const updateSelection = () => {
         const checkedCount = rowCheckboxes.filter((checkbox) => checkbox.checked).length;
         deleteButton.disabled = checkedCount === 0;
-        selectedCount.textContent = `${checkedCount} đã chọn`;
+        selectedCount.textContent = selectedCount.dataset.countTemplate.replace("{0}", checkedCount);
         selectAll.checked = rowCheckboxes.length > 0 && checkedCount === rowCheckboxes.length;
         selectAll.indeterminate = checkedCount > 0 && checkedCount < rowCheckboxes.length;
       };
@@ -131,9 +133,14 @@
       rowCheckboxes.forEach((checkbox) => checkbox.addEventListener("change", updateSelection));
       bulkForm.addEventListener("submit", (event) => {
         const checkedCount = rowCheckboxes.filter((checkbox) => checkbox.checked).length;
-        if (checkedCount === 0 || !confirm(`Xóa ${checkedCount} nhân viên đã chọn?`)) {
+        if (checkedCount === 0 || !confirm(bulkForm.dataset.confirmMessage)) {
           event.preventDefault();
         }
+      });
+      document.querySelectorAll(".single-delete-form").forEach((form) => {
+        form.addEventListener("submit", (event) => {
+          if (!confirm(form.dataset.confirmMessage)) event.preventDefault();
+        });
       });
       updateSelection();
     })();

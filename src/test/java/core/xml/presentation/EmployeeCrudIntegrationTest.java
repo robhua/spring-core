@@ -46,6 +46,13 @@ public class EmployeeCrudIntegrationTest {
 		mockMvc.perform(get("/employees"))
 				.andExpect(status().isOk())
 				.andExpect(view().name("employees/list"));
+		mockMvc.perform(post("/employees").param("empName", " ").param("age", "-1"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("employees/form"))
+				.andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content()
+						.string(containsString("Tên nhân viên không được để trống")))
+				.andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content()
+						.string(containsString("Tuổi không được là số âm")));
 
 		mockMvc.perform(post("/employees").param("empName", "Nguyễn Minh An").param("age", "32"))
 				.andExpect(status().is3xxRedirection())

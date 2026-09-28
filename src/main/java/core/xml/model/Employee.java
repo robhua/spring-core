@@ -7,11 +7,11 @@ import jakarta.validation.constraints.Size;
 
 public class Employee {
 	private int empId;
-	@NotBlank(message = "Tên nhân viên không được để trống")
-	@Size(max = 255, message = "Tên nhân viên không được dài quá 255 ký tự")
+	@NotBlank(message = "{employee.name.required}")
+	@Size(max = 255, message = "{employee.name.maxLength}")
 	private String empName;
-	@Min(value = 0, message = "Tuổi không được là số âm")
-	@Max(value = 120, message = "Tuổi phải nhỏ hơn hoặc bằng 120")
+	@Min(value = 0, message = "{employee.age.min}")
+	@Max(value = 120, message = "{employee.age.max}")
 	private int age;
 
 	public int getEmpId() {
