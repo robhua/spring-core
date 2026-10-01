@@ -5,6 +5,8 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,6 +26,7 @@ import core.xml.model.Employee;
 @RestController
 @RequestMapping("/api/employees")
 public class EmployeeRestController {
+	private static final Logger log = LoggerFactory.getLogger(EmployeeRestController.class);
 	private final EmployeeService employeeService;
 
 	public EmployeeRestController(EmployeeService employeeService) {
@@ -43,6 +46,7 @@ public class EmployeeRestController {
 	@PostMapping
 	public ResponseEntity<Employee> create(@Valid @RequestBody Employee employee) {
 		Employee saved = employeeService.save(employee);
+		log.info("Employee created: employeeId={}", saved.getEmpId());
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}")
 				.buildAndExpand(saved.getEmpId())
@@ -59,6 +63,7 @@ public class EmployeeRestController {
 		if (!employeeService.update(employee)) {
 			throw notFound(id);
 		}
+		log.info("Employee updated: employeeId={}", id);
 		return employee;
 	}
 
@@ -67,6 +72,7 @@ public class EmployeeRestController {
 		if (!employeeService.deleteById(id)) {
 			throw notFound(id);
 		}
+		log.info("Employee deleted: employeeId={}", id);
 		return ResponseEntity.noContent().build();
 	}
 

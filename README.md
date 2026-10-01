@@ -55,6 +55,10 @@ Khởi chạy ứng dụng web:
 mvn spring-boot:run
 ```
 
+Sau khi bật cấu hình này, dừng và chạy lại `mvn spring-boot:run` một lần để nạp DevTools. Từ đó, Java extension trong VS Code tự biên dịch mã nguồn đã lưu; DevTools phát hiện lớp mới và tự khởi động lại ứng dụng. Tính năng này áp dụng cho môi trường phát triển local, không triển khai lên server từ xa.
+
+Để debug MVC bằng breakpoint, dừng tiến trình `mvn spring-boot:run`, mở tab **Run and Debug** trong VS Code, chọn **Spring MVC: Debug** rồi nhấn `F5`. Cấu hình khởi chạy `core.annotation.presentation.Main` dưới Java debugger; đặt breakpoint trong controller để dừng tại endpoint. Không chạy đồng thời với tiến trình Maven cũ vì cả hai dùng cùng cổng ứng dụng.
+
 Log ứng dụng (bao gồm lỗi và stack trace) được ghi vào `logs/application.log` tính từ thư mục chạy lệnh, thay vì in ra console. File tự xoay vòng khi đạt 10 MB, giữ tối đa 7 ngày và tổng dung lượng log lưu trữ tối đa 100 MB. Xem log theo thời gian thực bằng `tail -f logs/application.log`. Thông báo của Maven vẫn xuất hiện trên console.
 
 Chuyển ngôn ngữ bằng nút `EN`/`VI` ở góc trên. Lựa chọn được lưu trong session; giao diện mặc định là tiếng Việt.
