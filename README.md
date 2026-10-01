@@ -22,7 +22,7 @@ src/main/resources/
   jdbc.properties         Cấu hình datasource XML
   messages*.properties    Nội dung English và Tiếng Việt
   templates/
-    fragments/            Thymeleaf fragments dùng chung
+    fragments/            Layout chung cùng header và footer Thymeleaf
     employees/            Trang danh sách và form
   static/
     css/                   Base/layout/components và styles theo page
@@ -31,6 +31,8 @@ src/test/                  Unit và Spring context tests
 ```
 
 Project cung cấp giao diện MVC dùng Thymeleaf và REST API cùng thao tác trên một service/DAO nhân viên.
+
+Các trang Thymeleaf dùng `fragments/layout.html` làm khung chung. Mỗi trang truyền vào fragment tiêu đề, header, nội dung trong body, CSS và JavaScript riêng; header và footer dùng lại từ `fragments/`.
 
 ## Yêu cầu
 

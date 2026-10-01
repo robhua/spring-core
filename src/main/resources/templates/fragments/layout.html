@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}"
+      th:fragment="layout(pageTitle, pageHeader, pageContent, pageStyles, pageScripts)">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:replace="${pageTitle}"></title>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+  <th:block th:replace="${pageStyles}"></th:block>
+</head>
+<body>
+  <div class="site-layout">
+    <header th:replace="${pageHeader}"></header>
+    <div class="site-content">
+      <th:block th:replace="${pageContent}"></th:block>
+    </div>
+    <footer th:replace="~{fragments/site-footer :: siteFooter}"></footer>
+  </div>
+  <th:block th:replace="${pageScripts}"></th:block>
+</body>
+</html>

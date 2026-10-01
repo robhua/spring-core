@@ -29,7 +29,6 @@ td { height: 70px; padding: 10px 24px; border-top: 1px solid #e9ede6; font-size:
 .text-action { padding: 6px 0; border: 0; background: transparent; color: var(--forest); cursor: pointer; font-size: 12px; font-weight: 700; }
 .text-action:hover { text-decoration: underline; text-underline-offset: 3px; }
 .text-danger { color: var(--coral); }
-.directory-footer { height: 39px; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; color: #8b968e; background: #f8f9f5; font-size: 8px; font-weight: 700; letter-spacing: .8px; }
 .empty-state { min-height: 250px; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 .empty-mark { width: 42px; height: 42px; margin-bottom: 14px; display: grid; place-items: center; color: var(--forest); border: 1px solid var(--line); border-radius: 50%; font-size: 20px; }
 .empty-state h3 { margin-bottom: 7px; font-family: Georgia, serif; font-size: 20px; font-weight: 400; }

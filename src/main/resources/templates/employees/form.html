@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::pageTitle}, ~{fragments/site-header :: siteHeader(false, true)}, ~{::pageContent}, ~{::pageStyles}, ~{::pageScripts})}">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title th:text="|${pageTitle} · #{app.brand.name}|"></title>
-  <link rel="stylesheet" th:href="@{/css/app.css}">
-  <link rel="stylesheet" th:href="@{/css/pages/employee-management.css}">
+  <title th:fragment="pageTitle" th:text="|${pageTitle} · #{app.brand.name}|"></title>
+  <th:block th:fragment="pageStyles">
+    <link rel="stylesheet" th:href="@{/css/pages/employee-management.css}">
+  </th:block>
 </head>
 <body>
-  <header th:replace="~{fragments/site-header :: siteHeader(false, true)}"></header>
-
-  <main class="page-shell form-shell">
+  <main class="page-shell form-shell" th:fragment="pageContent">
     <a class="back-link" th:href="@{/employees}"><span aria-hidden="true">←</span> <span th:text="#{employee.form.back}"></span></a>
     <section class="form-layout">
       <div class="form-intro">
@@ -43,5 +41,6 @@
     </section>
     <p class="form-note"><span>*</span> <span th:text="#{form.required.note}"></span></p>
   </main>
+  <th:block th:fragment="pageScripts"></th:block>
 </body>
 </html>

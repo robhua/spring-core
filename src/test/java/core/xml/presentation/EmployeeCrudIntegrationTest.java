@@ -46,10 +46,14 @@ public class EmployeeCrudIntegrationTest {
 	public void mvcScreensSupportEmployeeCrud() throws Exception {
 		mockMvc.perform(get("/employees"))
 				.andExpect(status().isOk())
-				.andExpect(view().name("employees/list"));
+				.andExpect(view().name("employees/list"))
+				.andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content()
+						.string(containsString("site-footer")));
 		mockMvc.perform(post("/employees").param("empName", " ").param("age", "-1"))
 				.andExpect(status().isOk())
 				.andExpect(view().name("employees/form"))
+				.andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content()
+						.string(containsString("site-footer")))
 				.andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content()
 						.string(containsString("Tên nhân viên không được để trống")))
 				.andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content()

@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/layout :: layout(~{::pageTitle}, ~{fragments/site-header :: siteHeader(true, false)}, ~{::pageContent}, ~{::pageStyles}, ~{::pageScripts})}">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title th:text="|#{employees.title} · #{app.brand.name}|"></title>
-  <link rel="stylesheet" th:href="@{/css/app.css}">
-  <link rel="stylesheet" th:href="@{/css/pages/employee-management.css}">
+  <title th:fragment="pageTitle" th:text="|#{employees.title} · #{app.brand.name}|"></title>
+  <th:block th:fragment="pageStyles">
+    <link rel="stylesheet" th:href="@{/css/pages/employee-management.css}">
+  </th:block>
 </head>
 <body>
-  <header th:replace="~{fragments/site-header :: siteHeader(true, false)}"></header>
-
-  <main class="page-shell">
+  <main class="page-shell" th:fragment="pageContent">
     <section class="page-heading">
       <div>
         <p class="eyebrow" th:text="#{employees.eyebrow}"></p>
@@ -100,9 +98,10 @@
         <a class="page-link page-step" th:if="${hasNext}" th:href="@{/employees(page=${currentPage + 1})}" th:text="#{employees.pagination.next}"></a>
         <span class="page-link page-step is-disabled" th:unless="${hasNext}" aria-disabled="true" th:text="#{employees.pagination.next}"></span>
       </nav>
-      <footer class="directory-footer"><span th:text="#{app.brand.name}"></span><span th:text="#{employees.footer}"></span></footer>
     </section>
   </main>
-  <script defer th:src="@{/js/pages/employee-directory.js}"></script>
+  <th:block th:fragment="pageScripts">
+    <script defer th:src="@{/js/pages/employee-directory.js}"></script>
+  </th:block>
 </body>
 </html>
