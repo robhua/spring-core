@@ -3,6 +3,7 @@ package core.xml.model;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class Employee {
@@ -10,9 +11,10 @@ public class Employee {
 	@NotBlank(message = "{employee.name.required}")
 	@Size(max = 255, message = "{employee.name.maxLength}")
 	private String empName;
+	@NotNull(message = "{employee.age.required}")
 	@Min(value = 0, message = "{employee.age.min}")
 	@Max(value = 120, message = "{employee.age.max}")
-	private int age;
+	private Integer age;
 
 	public int getEmpId() {
 		return empId;
@@ -30,11 +32,11 @@ public class Employee {
 		this.empName = empName;
 	}
 
-	public int getAge() {
+	public Integer getAge() {
 		return age;
 	}
 
-	public void setAge(int age) {
+	public void setAge(Integer age) {
 		this.age = age;
 	}
 

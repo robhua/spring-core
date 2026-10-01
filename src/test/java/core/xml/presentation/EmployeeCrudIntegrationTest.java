@@ -86,6 +86,25 @@ public class EmployeeCrudIntegrationTest {
 	}
 
 	@Test
+	public void mvcRequiresAgeForCreateAndUpdate() throws Exception {
+		mockMvc.perform(post("/employees").param("empName", "Missing Age"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("employees/form"))
+				.andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content()
+						.string(containsString("Tuổi là bắt buộc")));
+		assertTrue(jdbcTemplate.queryForObject("SELECT COUNT(*) FROM employee", Integer.class) == 0);
+
+		jdbcTemplate.update("INSERT INTO employee (name, age) VALUES (?, ?)", "Existing Employee", 42);
+		int employeeId = jdbcTemplate.queryForObject("SELECT id FROM employee", Integer.class);
+		mockMvc.perform(post("/employees/{id}", employeeId).param("empName", "Changed Name"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("employees/form"))
+				.andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content()
+						.string(containsString("Tuổi là bắt buộc")));
+		assertTrue(jdbcTemplate.queryForObject("SELECT age FROM employee WHERE id = ?", Integer.class, employeeId) == 42);
+	}
+
+	@Test
 	public void languageSwitchChangesMessagesAndPersistsInSession() throws Exception {
 		jdbcTemplate.update("INSERT INTO employee (name, age) VALUES (?, ?)", "Locale Test Employee", 29);
 		MvcResult englishResult = mockMvc.perform(get("/employees").param("lang", "en"))
