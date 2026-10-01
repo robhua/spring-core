@@ -55,6 +55,8 @@ Khởi chạy ứng dụng web:
 mvn spring-boot:run
 ```
 
+Log ứng dụng (bao gồm lỗi và stack trace) được ghi vào `logs/application.log` tính từ thư mục chạy lệnh, thay vì in ra console. File tự xoay vòng khi đạt 10 MB, giữ tối đa 7 ngày và tổng dung lượng log lưu trữ tối đa 100 MB. Xem log theo thời gian thực bằng `tail -f logs/application.log`. Thông báo của Maven vẫn xuất hiện trên console.
+
 Chuyển ngôn ngữ bằng nút `EN`/`VI` ở góc trên. Lựa chọn được lưu trong session; giao diện mặc định là tiếng Việt.
 
 Mở [http://localhost:8080/employees](http://localhost:8080/employees) để quản lý hồ sơ. Dùng nút `EN`/`VI` ở header để đổi ngôn ngữ; lựa chọn được lưu theo session và mặc định là tiếng Việt. Nội dung tiếng Anh nằm trong `messages.properties`, tiếng Việt trong `messages_vi.properties`.
